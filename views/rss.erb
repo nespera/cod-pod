@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<% files = Dir[@dir + "/*.mp3"] %>
+<% date = files.map{|f| File.mtime(f)}.max.rfc2822 %>
+<rss version="2.0">
+  <channel>
+    <title>cod-pod</title>
+    <description>Podcast generated from directory of mp3s</description>
+    <link></link>
+    <language></language>
+    <copyright></copyright>
+    <lastBuildDate><%= date %></lastBuildDate>
+    <pubDate><%= date %></pubDate>
+    <docs></docs>
+    <webMaster></webMaster>
+<% (files.sort_by{ |f| File.mtime(f) }).each do |file| %>
+<% url = "file://" + file %>
+<% title, description = File.basename(file, ".mp3").split("-", 2) %>
+    <item>
+      <title><%= title %></title>
+      <link></link>
+      <guid><%= url %></guid>
+      <description><%= description %></description>
+      <enclosure url="<%= url %>" length="<%= File.size(file) %>" type="audio/mpeg"/>
+      <category>Podcasts</category>
+      <pubDate><%= File.mtime(file).rfc2822 %></pubDate>
+    </item>
+<% end %>
+  </channel>
+</rss>
